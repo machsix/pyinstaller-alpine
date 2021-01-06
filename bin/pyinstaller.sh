@@ -5,6 +5,9 @@ set -e
 
 # Generate a random key for encryption
 random_key=$(pwgen -s 16 1)
+if [ -z ${distpath+x} ]; then
+  distpath='./dist/alpine'
+fi
 pyinstaller_args="${@/--random-key/--key $random_key}"
 
 # Use the hacked ldd to fix libc.musl-x86_64.so.1 location
@@ -20,4 +23,5 @@ fi
 exec pyinstaller \
     --exclude-module pycrypto \
     --exclude-module PyInstaller \
+    --distpath ${distpath} \
     ${pyinstaller_args}
